@@ -1,0 +1,128 @@
+{
+  "trained_at": "2026-10-13T12:09:17+00:00",
+  "dataset": "Survey Lung Cancer (data/survey_lung_cancer.csv)",
+  "rows_in_file": 309,
+  "rows_used": 276,
+  "positives": 238,
+  "negatives": 38,
+  "validation": "Repeated stratified 5-fold cross-validation, 10 repeats",
+  "selected_model": "Logistic Regression",
+  "features": [
+    "gender",
+    "age",
+    "smoking",
+    "yellowFingers",
+    "anxiety",
+    "peerPressure",
+    "chronicDisease",
+    "fatigue",
+    "allergy",
+    "wheezing",
+    "alcohol",
+    "coughing",
+    "shortnessOfBreath",
+    "swallowingDifficulty",
+    "chestPain"
+  ],
+  "results": {
+    "Logistic Regression": {
+      "roc_auc": {
+        "mean": 0.9371,
+        "std": 0.0358
+      },
+      "balanced_accuracy": {
+        "mean": 0.8598,
+        "std": 0.0597
+      },
+      "accuracy": {
+        "mean": 0.8746,
+        "std": 0.0484
+      },
+      "recall_yes": {
+        "mean": 0.8806,
+        "std": 0.0563
+      },
+      "f1_yes": {
+        "mean": 0.9228,
+        "std": 0.0316
+      },
+      "train_balanced_accuracy": 0.9029,
+      "train_validation_gap": 0.0431,
+      "chosen_params": {
+        "logisticregression__C": 0.1
+      }
+    },
+    "Random Forest": {
+      "roc_auc": {
+        "mean": 0.9173,
+        "std": 0.0484
+      },
+      "balanced_accuracy": {
+        "mean": 0.8779,
+        "std": 0.0582
+      },
+      "accuracy": {
+        "mean": 0.8793,
+        "std": 0.0483
+      },
+      "recall_yes": {
+        "mean": 0.88,
+        "std": 0.054
+      },
+      "f1_yes": {
+        "mean": 0.9254,
+        "std": 0.0318
+      },
+      "train_balanced_accuracy": 0.9158,
+      "train_validation_gap": 0.0379
+    },
+    "Gradient Boosting": {
+      "roc_auc": {
+        "mean": 0.8997,
+        "std": 0.0433
+      },
+      "balanced_accuracy": {
+        "mean": 0.6969,
+        "std": 0.0846
+      },
+      "accuracy": {
+        "mean": 0.8811,
+        "std": 0.0349
+      },
+      "recall_yes": {
+        "mean": 0.9512,
+        "std": 0.0333
+      },
+      "f1_yes": {
+        "mean": 0.9323,
+        "std": 0.0205
+      },
+      "train_balanced_accuracy": 0.9105,
+      "train_validation_gap": 0.2136
+    },
+    "SVM (RBF)": {
+      "roc_auc": {
+        "mean": 0.9347,
+        "std": 0.0304
+      },
+      "balanced_accuracy": {
+        "mean": 0.8571,
+        "std": 0.0655
+      },
+      "accuracy": {
+        "mean": 0.8909,
+        "std": 0.0401
+      },
+      "recall_yes": {
+        "mean": 0.9037,
+        "std": 0.0481
+      },
+      "f1_yes": {
+        "mean": 0.934,
+        "std": 0.0256
+      },
+      "train_balanced_accuracy": 0.936,
+      "train_validation_gap": 0.0789
+    }
+  }
+}

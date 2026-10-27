@@ -1,0 +1,18 @@
+CT scan model (lung_ct_model.pt) training data
+
+1) The IQ-OTH/NCCD lung cancer dataset
+   Hamdalla F. Al-Yasriy, Muayed S. Al-Huseiny, Furat Mohsen, Enam Khalil, Zainab Hassan
+   Mendeley Data, Version 4 (2023). DOI: 10.17632/bhmdr45bh2
+   https://data.mendeley.com/datasets/bhmdr45bh2/4
+   License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+   Iraq-Oncology Teaching Hospital / National Center for Cancer Diseases.
+   110 cases (55 normal, 15 benign, 40 malignant), 1,097 CT slice images.
+   Stored in "Medical Reports/Lung Cancer/IQ-OTHNCCD".
+
+2) Chest CT-Scan images dataset
+   Mohamed Hany, Kaggle: https://www.kaggle.com/datasets/mohamedhanyyy/chest-ctscan-images
+   License: CC0 1.0 Public Domain (as listed by public mirrors of the dataset)
+   Classes: adenocarcinoma, large cell carcinoma, squamous cell carcinoma, normal.
+   Stored in "Medical Reports/Lung Cancer" (dataset/, Suffering/, Not Suffering/).
+   Note: many files are copies of each other ("6 - Copy (2).png" ...), including across the
+   train/valid/test folders; train_lung_ct_model.py removes and groups them.

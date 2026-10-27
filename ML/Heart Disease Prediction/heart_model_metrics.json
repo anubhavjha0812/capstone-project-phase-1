@@ -1,0 +1,39 @@
+{
+  "dataset": "UCI Heart Disease, Cleveland (CC BY 4.0), complete rows",
+  "patients": 297,
+  "positives": 137,
+  "validation": "5-fold stratified CV x10, C tuned inside each training fold",
+  "candidates": {
+    "logistic_regression_one_hot": {
+      "roc_auc": 0.9107,
+      "accuracy": 0.8357,
+      "accuracy_std": 0.0421,
+      "balanced_accuracy": 0.8323,
+      "sensitivity": 0.7902,
+      "train_accuracy": 0.8653,
+      "train_validation_gap": 0.0296,
+      "chosen_params": {
+        "logisticregression__C": 1
+      }
+    },
+    "logistic_regression_codes": {
+      "roc_auc": 0.9109,
+      "accuracy": 0.837,
+      "accuracy_std": 0.0363,
+      "balanced_accuracy": 0.8303,
+      "sensitivity": 0.7437,
+      "train_accuracy": 0.8612,
+      "train_validation_gap": 0.0241
+    },
+    "random_forest_min_leaf_5": {
+      "roc_auc": 0.9128,
+      "accuracy": 0.8323,
+      "accuracy_std": 0.0445,
+      "balanced_accuracy": 0.828,
+      "sensitivity": 0.7741,
+      "train_accuracy": 0.9109,
+      "train_validation_gap": 0.0786
+    }
+  },
+  "selected": "logistic_regression_one_hot"
+}

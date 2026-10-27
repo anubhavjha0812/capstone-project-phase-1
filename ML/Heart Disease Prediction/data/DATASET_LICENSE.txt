@@ -1,0 +1,13 @@
+﻿Heart Disease model training data
+
+Heart Disease dataset (Cleveland Clinic Foundation part, "processed.cleveland.data")
+Andras Janosi, William Steinbrunn, Matthias Pfisterer, Robert Detrano (1988)
+UCI Machine Learning Repository. DOI: 10.24432/C52P4X
+https://archive.ics.uci.edu/dataset/45/heart+disease
+
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+303 patients, 14 columns. Column 14 ("num") is 0 for no heart disease and 1-4 for disease.
+Note: the popular Kaggle copy of this data ("heart.csv") has this label reversed (target 1 = no disease)
+and re-codes several columns. The old heart_disease.pkl was trained on that copy, which made the website
+show reversed results. train_heart_model.py trains on this original file instead.

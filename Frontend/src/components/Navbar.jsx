@@ -1,0 +1,233 @@
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { FaBars, FaTimes, FaUserCircle } from "react-icons/fa";
+import { UserContext } from "../context/UserContext";
+import logoIcon from "../assets/LogoIcon.png";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useI18n } from "../i18n/I18nContext";
+
+// True when the row of links runs past the navbar or into the logo
+const rowOverflows = (nav) => {
+  const logo = nav.querySelector(".navbar-logo").getBoundingClientRect();
+  const links = nav.querySelector(".navbar-links").getBoundingClientRect();
+  const gap = 8;
+  const overlapsLogo =
+    links.left < logo.right + gap && links.right > logo.left - gap;
+  return nav.scrollWidth > nav.clientWidth + 1 || overlapsLogo;
+};
+
+const navLinks = [
+  { to: "/", key: "nav.home" },
+  { to: "/predictors", key: "nav.predictors" },
+  { to: "/about-predictix", key: "nav.aboutPredictix" },
+  { to: "/integration", key: "nav.integration" },
+  { to: "/faqs", key: "nav.faqs" },
+  { to: "/privacy-policy", key: "nav.privacyPolicy" },
+  { to: "/about", key: "nav.aboutUs" },
+];
+
+function Navbar() {
+  const { userInfo, setUserInfo } = useContext(UserContext);
+  const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate();
+  const { t, language } = useI18n();
+
+  // "compact" = links moved into the ☰ menu because the full row doesn't fit.
+  // Decided by measuring, because the row's width depends on the language and login state.
+  const navRef = useRef(null);
+  const [compact, setCompact] = useState(false);
+  const compactRef = useRef(false);
+  const fullRowWidth = useRef(0);
+  compactRef.current = compact;
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  // Glass effect: as you scroll down, the bar gradually turns from solid blue
+  // into see-through frosted white. --glass goes from 0 (top) to 1 (after 160px);
+  // it is set directly on the element so scrolling does not re-render the navbar.
+  useEffect(() => {
+    const update = () => {
+      const glass = Math.min(Math.max(window.scrollY / 160, 0), 1);
+      navRef.current?.style.setProperty("--glass", glass.toFixed(3));
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
+
+  // Re-measure the full row whenever its text changes
+  useLayoutEffect(() => {
+    setCompact(false);
+  }, [language, userInfo?.username]);
+
+  // After each render in full-row mode, switch to compact if the row doesn't fit
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    if (!compact && nav && rowOverflows(nav)) {
+      fullRowWidth.current = nav.scrollWidth;
+      setCompact(true);
+    }
+  });
+
+  // React to window resizes and late font loading
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return undefined;
+
+    const check = () => {
+      if (!compactRef.current) {
+        if (rowOverflows(nav)) {
+          fullRowWidth.current = nav.scrollWidth;
+          setCompact(true);
+        }
+      } else if (nav.clientWidth >= fullRowWidth.current + 16) {
+        setCompact(false); // enough room again; the layout effect re-checks
+        setIsMobile(false);
+      }
+    };
+
+    const observer = new ResizeObserver(check);
+    observer.observe(nav);
+    observer.observe(nav.querySelector(".navbar-links"));
+    return () => observer.disconnect();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/v1/users/profile",
+        {
+          credentials: "include",
+        }
+      );
+      if (response.ok) {
+        const userData = await response.json();
+        setUserInfo(userData.data);
+      } else if (response.status === 401) {
+        // Session missing or expired: clear user
+        setUserInfo(null);
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
+
+  const logout = async (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    try {
+      await fetch("http://localhost:8080/api/v1/users/logout", {
+        credentials: "include",
+        method: "POST",
+      });
+    } catch (error) {
+      console.error("Logout failed with error:", error);
+    } finally {
+      // Clear React state and browser localStorage
+      setUserInfo(null);
+      if (isMobile) {
+        setIsMobile(false);
+      }
+      navigate("/login");
+    }
+  };
+
+  const username = userInfo?.username;
+
+  const isLoggedIn = Boolean(username);
+
+  // Logged-out visitors only see Log In / Sign Up (all other pages require login)
+  const visibleLinks = isLoggedIn ? navLinks : [];
+
+  const toggleMobileMenu = () => {
+    setIsMobile(!isMobile);
+  };
+
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setIsMobile(false);
+    }
+  };
+
+  return (
+    <nav ref={navRef} className={`navbar ${compact ? "compact" : ""}`}>
+      <Link to="/" className="navbar-logo" onClick={handleLinkClick}>
+        <img src={logoIcon} alt="" />
+        <span className="navbar-brand">Predictix</span>
+      </Link>
+      <div className={`navbar-links ${isMobile ? "active" : ""}`}>
+        {visibleLinks.map(({ to, key }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={to === "/"}
+            className={({ isActive }) =>
+              isActive ? "navbar-link active" : "navbar-link"
+            }
+            onClick={handleLinkClick}
+          >
+            {t(key)}
+          </NavLink>
+        ))}
+        {isLoggedIn ? (
+          <div className="navbar-auth">
+            {/* Greeting with the account icon at the right end of the same line */}
+            <div className="navbar-user">
+              <span className="navbar-greeting" title={username}>{t("nav.hello", { name: username })}</span>
+              <NavLink
+                to="/account"
+                className="navbar-account"
+                onClick={handleLinkClick}
+                aria-label={t("nav.account")}
+                title={t("nav.account")}
+              >
+                <FaUserCircle aria-hidden="true" />
+              </NavLink>
+            </div>
+            <NavLink
+              to="/forgot-password"
+              className="navbar-change-password"
+              onClick={handleLinkClick}
+            >
+              {t("nav.changePassword")}
+            </NavLink>
+            <button
+              type="button"
+              onClick={logout}
+              className="btn btn-logout"
+            >
+              {t("nav.logout")}
+            </button>
+          </div>
+        ) : (
+          <div className="navbar-auth">
+            <NavLink
+              to="/login"
+              className="btn btn-login"
+              onClick={handleLinkClick}
+            >
+              {t("nav.login")}
+            </NavLink>
+            <NavLink
+              to="/signup"
+              className="btn btn-signup"
+              onClick={handleLinkClick}
+            >
+              {t("nav.signup")}
+            </NavLink>
+          </div>
+        )}
+      </div>
+      <LanguageSwitcher />
+      <div className="hamburger" onClick={toggleMobileMenu} aria-label={t("nav.menu")} aria-expanded={isMobile} role="button">
+        {isMobile ? <FaTimes size={30} /> : <FaBars size={30} />}
+      </div>
+    </nav>
+  );
+}
+
+export default Navbar;

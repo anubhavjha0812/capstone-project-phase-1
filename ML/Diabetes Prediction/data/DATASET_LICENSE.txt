@@ -1,0 +1,12 @@
+﻿Diabetes model training data
+
+Pima Indians Diabetes Database (768 women of Pima Indian heritage, age 21+)
+Originally from the National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK).
+Smith, J.W., Everhart, J.E., Dickson, W.C., Knowler, W.C., Johannes, R.S. (1988). Using the ADAP
+learning algorithm to forecast the onset of diabetes mellitus. Proc. Annual Symposium on Computer
+Application in Medical Care, 261-265.
+Distributed by the UCI Machine Learning repository; Kaggle copy "uciml/pima-indians-diabetes-database"
+(license listed there: CC0 1.0 Public Domain).
+
+Note: zeros in Glucose, BloodPressure, SkinThickness, Insulin and BMI mean "not measured".
+train_diabetes_model.py treats them as missing values.

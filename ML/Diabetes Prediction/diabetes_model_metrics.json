@@ -1,0 +1,51 @@
+{
+  "dataset": "Pima Indians Diabetes Database (768 patients)",
+  "validation": "5-fold stratified CV x10, hyperparameters tuned inside each training fold",
+  "candidates": {
+    "old_setup_linear_svm_C1_unweighted": {
+      "roc_auc": 0.8309,
+      "accuracy": 0.7716,
+      "balanced_accuracy": 0.7242,
+      "sensitivity": 0.5673,
+      "train_balanced_accuracy": 0.7312,
+      "train_validation_gap": 0.007
+    },
+    "linear_svm_balanced": {
+      "roc_auc": 0.8359,
+      "accuracy": 0.7515,
+      "balanced_accuracy": 0.7413,
+      "sensitivity": 0.7079,
+      "train_balanced_accuracy": 0.7511,
+      "train_validation_gap": 0.0098
+    },
+    "logistic_regression_balanced": {
+      "roc_auc": 0.8369,
+      "accuracy": 0.7522,
+      "balanced_accuracy": 0.7439,
+      "sensitivity": 0.7164,
+      "train_balanced_accuracy": 0.7525,
+      "train_validation_gap": 0.0086
+    },
+    "logistic_regression_balanced_no_imputation": {
+      "roc_auc": 0.8322,
+      "accuracy": 0.7528,
+      "balanced_accuracy": 0.7465,
+      "sensitivity": 0.7258,
+      "train_balanced_accuracy": 0.7555,
+      "train_validation_gap": 0.009
+    },
+    "random_forest_balanced": {
+      "roc_auc": 0.8367,
+      "accuracy": 0.7619,
+      "balanced_accuracy": 0.7686,
+      "sensitivity": 0.791,
+      "train_balanced_accuracy": 0.833,
+      "train_validation_gap": 0.0644,
+      "chosen_params": {
+        "randomforestclassifier__max_depth": 6,
+        "randomforestclassifier__min_samples_leaf": 10
+      }
+    }
+  },
+  "selected": "random_forest_balanced"
+}

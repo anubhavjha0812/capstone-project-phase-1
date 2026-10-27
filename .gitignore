@@ -1,0 +1,23 @@
+# secrets and local state
+.env
+.env.*
+Backend/data/
+Backend/uploads/*
+!Backend/uploads/uploads.txt
+
+# dependencies and build output
+node_modules/
+Frontend/dist/
+__pycache__/
+*.pyc
+.venv/
+
+# large training datasets (samples in "Medical Reports/*/Suffering" and "Not Suffering" are kept)
+Medical Reports/Breast Cancer/dataset/
+Medical Reports/Lung Cancer/dataset/
+Medical Reports/Lung Cancer/IQ-OTHNCCD/
+
+# breast model weights are too large for git (see README)
+ML/Breast Cancer Prediction/weights/
+*.pt.tmp
+!ML/Lung Cancer Prediction/lung_ct_model.pt

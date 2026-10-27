@@ -1,0 +1,56 @@
+# One step: docker compose up --build
+#   App:     http://localhost:5173
+#   API:     http://localhost:8080
+# Works without any .env file. To change secrets or enable email OTP / Cloudinary,
+# copy .env.example to .env (next to this file) and edit it.
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    restart: unless-stopped
+    environment:
+      PORT: 8080
+      MONGODB_URI: mongodb://mongo:27017
+      CORS_ORIGIN: "*"
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET:-change-me-access-secret}
+      ACCESS_TOKEN_EXPIRY: ${ACCESS_TOKEN_EXPIRY:-1d}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET:-change-me-refresh-secret}
+      REFRESH_TOKEN_EXPIRY: ${REFRESH_TOKEN_EXPIRY:-10d}
+      # Optional: real OTP emails (without them the OTP is printed in `docker compose logs backend`)
+      EMAIL_SERVICE: ${EMAIL_SERVICE:-gmail}
+      EMAIL_USER: ${EMAIL_USER:-}
+      EMAIL_PASS: ${EMAIL_PASS:-}
+      # Fine-tuned Phikon weights for the breast predictor, downloaded once into the volume below
+      BREAST_MODEL_DIR: /models/breast
+      BREAST_MODEL_URL: ${BREAST_MODEL_URL:-}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    volumes:
+      - backend-uploads:/app/Backend/uploads
+      - backend-data:/app/Backend/data
+      - breast-model:/models/breast
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
+  backend-uploads:
+  backend-data:
+  breast-model:

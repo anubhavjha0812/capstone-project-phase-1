@@ -1,0 +1,127 @@
+{
+  "task": "malignant vs not malignant (normal or benign)",
+  "datasets": {
+    "iq_othnccd": "The IQ-OTH/NCCD lung cancer dataset (Mendeley Data, DOI 10.17632/bhmdr45bh2, CC BY 4.0)",
+    "kaggle_chest_ct": "Chest CT-Scan images dataset (Kaggle, Mohamed Hany, CC0)"
+  },
+  "unique_images": 1901,
+  "per_source_counts": {
+    "iq_othnccd": {
+      "images": 1054,
+      "malignant": 547
+    },
+    "kaggle_chest_ct": {
+      "images": 847,
+      "malignant": 781
+    }
+  },
+  "validation": "5-fold grouped CV (near-duplicates and IQ scan blocks never split), C tuned inside each training fold",
+  "model": "frozen ImageNet ResNet-18 features + logistic regression (class_weight=balanced)",
+  "C_per_fold": [
+    0.1,
+    0.01,
+    0.003,
+    0.1,
+    0.003
+  ],
+  "final_C": 0.01,
+  "cross_validated": {
+    "n": 1901,
+    "accuracy": 0.9753,
+    "balanced_accuracy": 0.9729,
+    "sensitivity": 0.9789,
+    "specificity": 0.9668,
+    "confusion_matrix(rows=true not/malignant)": [
+      [
+        554,
+        19
+      ],
+      [
+        28,
+        1300
+      ]
+    ],
+    "roc_auc": 0.993,
+    "train_balanced_accuracy": 0.9949,
+    "train_validation_gap": 0.022
+  },
+  "cross_validated_per_source": {
+    "iq_othnccd": {
+      "n": 1054,
+      "accuracy": 0.9706,
+      "balanced_accuracy": 0.9711,
+      "sensitivity": 0.958,
+      "specificity": 0.9842,
+      "confusion_matrix(rows=true not/malignant)": [
+        [
+          499,
+          8
+        ],
+        [
+          23,
+          524
+        ]
+      ],
+      "roc_auc": 0.9928
+    },
+    "kaggle_chest_ct": {
+      "n": 847,
+      "accuracy": 0.9811,
+      "balanced_accuracy": 0.9135,
+      "sensitivity": 0.9936,
+      "specificity": 0.8333,
+      "confusion_matrix(rows=true not/malignant)": [
+        [
+          55,
+          11
+        ],
+        [
+          5,
+          776
+        ]
+      ],
+      "roc_auc": 0.989
+    }
+  },
+  "cross_hospital": {
+    "train_iq_othnccd_test_kaggle_chest_ct": {
+      "n": 847,
+      "accuracy": 0.9421,
+      "balanced_accuracy": 0.6565,
+      "sensitivity": 0.9949,
+      "specificity": 0.3182,
+      "confusion_matrix(rows=true not/malignant)": [
+        [
+          21,
+          45
+        ],
+        [
+          4,
+          777
+        ]
+      ],
+      "roc_auc": 0.9589
+    },
+    "train_kaggle_chest_ct_test_iq_othnccd": {
+      "n": 1054,
+      "accuracy": 0.8083,
+      "balanced_accuracy": 0.812,
+      "sensitivity": 0.7166,
+      "specificity": 0.9073,
+      "confusion_matrix(rows=true not/malignant)": [
+        [
+          460,
+          47
+        ],
+        [
+          155,
+          392
+        ]
+      ],
+      "roc_auc": 0.8987
+    }
+  },
+  "unusual_image_threshold": 0.8,
+  "genuine_slices_rejected_as_unusual": 0.0,
+  "train_minutes": 1.5
+}

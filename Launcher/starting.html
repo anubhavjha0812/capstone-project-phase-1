@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Starting Predictix...</title>
+<style>
+  :root { --navy: #212b5c; --blue: #1755ab; --tint: #9ad9ff; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #e8f6ff 100%);
+    font-family: "Segoe UI", system-ui, sans-serif; color: var(--navy); text-align: center; padding: 0 24px;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand img { width: 64px; height: 64px; }
+  .brand span { font-size: 40px; font-weight: 700; }
+  .spinner {
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 4px solid var(--tint); border-top-color: var(--blue); animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
+  p { margin: 0; font-size: 17px; }
+  #slow { display: none; max-width: 560px; color: #8a0019; font-size: 15px; line-height: 1.5; }
+  code { background: #fff; border: 1px solid #cbd5e0; border-radius: 4px; padding: 1px 5px; word-break: break-all; }
+</style>
+</head>
+<body>
+  <div class="brand"><img src="logo.png" alt=""><span>Predictix</span></div>
+  <div class="spinner" role="status" aria-label="Loading"></div>
+  <p id="msg">Starting Predictix&hellip;</p>
+  <p id="slow"></p>
+<script>
+  // The launcher opens this page right away and starts the servers in the background.
+  // Poll the website (an image from its public folder) and switch over as soon as it answers.
+  const SITE = "http://localhost:5173/";
+  const log = new URLSearchParams(location.search).get("log") || "";
+  const started = Date.now();
+  function check() {
+    const img = new Image();
+    img.onload = () => location.replace(SITE);
+    img.onerror = () => {
+      const secs = (Date.now() - started) / 1000;
+      if (secs > 90) {
+        const slow = document.getElementById("slow");
+        slow.style.display = "block";
+        slow.innerHTML = "Predictix is taking longer than usual to start. If nothing happens, close this window " +
+          "and check the log file:<br><code></code>";
+        slow.querySelector("code").textContent = log;
+      }
+      setTimeout(check, 1000);
+    };
+    img.src = SITE + "PredictiXLogo.png?ping=" + Date.now();
+  }
+  check();
+</script>
+</body>
+</html>

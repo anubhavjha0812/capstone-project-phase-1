@@ -1,0 +1,11 @@
+**/node_modules
+**/dist
+**/.git
+.git
+Backend/.env
+Backend/uploads
+Backend/data
+Screenshots
+Medical Reports
+Launcher
+**/__pycache__
