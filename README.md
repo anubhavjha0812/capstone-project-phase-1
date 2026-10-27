@@ -1,35 +1,21 @@
 # Multi-Disease Prediction System
 
-## My contributions
+## Contributions by Anubhav Jha
 
-Predictix started from an existing open-source project (MERN app with four predictors; original authors credited in the
-[LICENSE](LICENSE) and `package.json`). This repository is my extended version. What I added or changed:
+Fixes and additions I made on top of the project files I received:
 
-**Machine learning**
-- Retrained and validated the heart, diabetes and lung models with repeated stratified cross-validation, and kept the
-  training scripts, dataset licences and metrics next to each model (`ML/*/train_*.py`, `*_metrics.json`).
-  Heart (Cleveland): ROC-AUC 0.91. Diabetes (Pima): ROC-AUC about 0.83 to 0.84. Lung questionnaire: ROC-AUC 0.94.
-- New lung CT model: ResNet-18 features with logistic regression, grouped 5-fold cross-validation on 1,901 CT images
-  (97.5% accuracy), with input checks that reject non-CT uploads.
-- Replaced the old breast CNN with a **fine-tuned Phikon ViT-B** (pathology foundation model) that grades breast tissue as
-  **high-grade / low-grade / stroma**. TCGA validation accuracy 92.2%; on a different hospital's data (CHTN) 76.9%.
-  The model stays loaded in one Python process (about 1 s per image) and its weights are downloaded automatically
-  from a GitHub Release.
-
-**Backend**
-- Works without a database (local-file mode) as well as with MongoDB; OTP password reset by email; stricter auth middleware.
-- Prediction history API, contact form and newsletter, safer file uploads, input validation for every predictor.
-- A single Python runner for all models, with clear error messages.
-
-**Frontend**
-- 18 languages, an account page with saved prediction history, protected routes, and new About, FAQ, Contact,
-  Privacy and Integration pages.
-- Redesigned styling, per-field form validation, and PDF reports that also work in the production build.
-
-**Packaging**
-- One-command setup with Docker (`docker compose up --build`), including MongoDB, and a Windows launcher.
-
-This project is a comprehensive multi-disease prediction platform designed to predict heart disease, diabetes, breast cancer, and lung cancer. Built using the MERN stack and integrated with machine learning models, Predictix offers an intuitive interface for users to input data and receive accurate health predictions, enhancing the diagnostic experience.
+- **Breast predictor:** the bundled breast model file was missing (a Git LFS pointer, not the real model). I replaced it with a
+  fine-tuned **Phikon ViT-B** that grades breast tissue as **high-grade / low-grade / stroma** (TCGA validation accuracy 92.2%,
+  other-hospital CHTN accuracy 76.9%). The result page shows the grade with probabilities, the PDF report and prediction
+  history include it, and the model is loaded once in a background Python process (about 1 s per image).
+- **Docker:** `docker compose up --build` now runs the whole app (website, API, MongoDB) without any `.env` file. The
+  breast model weights are downloaded automatically from a GitHub Release.
+- **Bug fixes:**
+  - Python scripts failed on Linux because the backend called `python`; it now uses `python3` (or `PYTHON`).
+  - MongoDB connection broke for URIs with a query string (`?appName=...`); the database name is now passed as an option.
+  - "Download Report" (PDF) failed in the production build because of the template path; the template now lives in `public/`.
+- **Repository hygiene:** `.gitignore` for secrets, local user data, uploads and large datasets; removed the tracked user store
+  (`mockUsers.json`).
 
 ## Quick start (one step, Docker)
 
