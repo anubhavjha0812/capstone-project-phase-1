@@ -47,7 +47,7 @@ const en = {
   home: {
     badge: "Quick and private",
     title: "Did you know Predictix is available to you at all times?",
-    subtitle: "Check your risk of heart disease, diabetes and lung cancer in seconds. Enter your health details or upload a lab report, any time of day.",
+    subtitle: "Check your risk of heart disease, diabetes and lung cancer, or grade a breast tissue image, in seconds. Enter your health details or upload a lab report, any time of day.",
     cta: "Get started",
   },
   predictors: {
@@ -203,9 +203,9 @@ const en = {
     diabetesInput:
       "8 parameters: pregnancies, glucose, blood pressure, skin thickness, insulin, BMI, diabetes pedigree function and age.",
     breastTitle: "Breast Cancer",
-    breastModel: "Convolutional Neural Network (CNN)",
+    breastModel: "Fine-tuned Phikon Vision Transformer",
     breastInput:
-      "A breast tissue (histopathology) image, classified as benign or malignant. (Coming soon on the website.)",
+      "A breast tissue microscope (histopathology) image, graded as high-grade tumour, low-grade tumour or stroma.",
     lungTitle: "Lung Cancer",
     lungModel: "ResNet-18 CNN (PyTorch) + Logistic Regression",
     lungInput: "Step 1: a lung CT scan image (optional). Step 2: 15 answers about gender, age, smoking and symptoms such as coughing, wheezing, shortness of breath and chest pain.",

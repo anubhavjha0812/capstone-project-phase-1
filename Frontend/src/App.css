@@ -3466,3 +3466,120 @@ button:disabled {
     width: 0;
   }
 }
+
+/* ---- Predictor pages (heart, diabetes, lung, breast): one consistent look ---- */
+.heart-page-container,
+.diabetes-page-container,
+.lung-page-container,
+.breast-page-container {
+  justify-content: flex-start;
+  min-height: 0;
+  padding: 2.5rem 1.25rem 4rem;
+}
+
+.heart-page-header,
+.diabetes-page-header,
+.lung-page-header,
+.breast-page-header {
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #212b5c;
+  margin-bottom: 1.5rem;
+}
+
+/* The form sits on a white card */
+.heart-page-form,
+.diabetes-page-form,
+.lung-page-form,
+.heart-page-result-container,
+.diabetes-page-result-container,
+.lung-page-result-container {
+  width: min(100%, 44rem);
+  padding: 1.75rem;
+  background: #ffffff;
+  border: 1px solid #e6ebf2;
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgba(33, 43, 92, 0.08);
+}
+
+.heart-page-input,
+.diabetes-page-input,
+.lung-page-input {
+  height: 44px;
+  padding: 0 0.85rem;
+  border: 1px solid #cfd8e6;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #212b5c;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.heart-page-input::placeholder,
+.diabetes-page-input::placeholder,
+.lung-page-input::placeholder {
+  color: #8b97b1;
+}
+
+.heart-page-input:focus,
+.diabetes-page-input:focus,
+.lung-page-input:focus {
+  outline: none;
+  border-color: #1755ab;
+  box-shadow: 0 0 0 3px rgba(23, 85, 171, 0.18);
+}
+
+/* Primary buttons and upload buttons share the brand blue */
+.heart-page-button,
+.diabetes-page-button,
+.lung-page-button {
+  min-width: 9rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  background-color: #1755ab;
+  font-family: inherit;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(23, 85, 171, 0.25);
+}
+
+.heart-page-button:hover,
+.diabetes-page-button:hover,
+.lung-page-button:hover {
+  background-color: #123f82;
+  transform: translateY(-1px);
+}
+
+.heart-page-upload-label,
+.diabetes-page-upload-label,
+.lung-page-upload-label {
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.heart-page-form label:not([class*="upload"]),
+.diabetes-page-form label:not([class*="upload"]) {
+  color: #3b4a6b;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* Result card buttons: same blue as the form buttons (they were green) */
+.lung-page-result-container .lung-page-button,
+.heart-page-result-container .heart-page-button,
+.diabetes-page-result-container .diabetes-page-button {
+  background-color: #1755ab;
+}
+
+/* Info pages (About, FAQ, Integration, Account): cards lift slightly on hover */
+.info-card,
+.account-card,
+.faq-item {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.info-card:hover,
+.account-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(33, 43, 92, 0.12);
+}
