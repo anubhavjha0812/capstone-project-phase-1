@@ -21,3 +21,4 @@ Medical Reports/Lung Cancer/IQ-OTHNCCD/
 ML/Breast Cancer Prediction/weights/
 *.pt.tmp
 !ML/Lung Cancer Prediction/lung_ct_model.pt
+Backend/src/data/
