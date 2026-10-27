@@ -14,6 +14,13 @@ Fixes and additions I made on top of the project files I received:
   - Python scripts failed on Linux because the backend called `python`; it now uses `python3` (or `PYTHON`).
   - MongoDB connection broke for URIs with a query string (`?appName=...`); the database name is now passed as an option.
   - "Download Report" (PDF) failed in the production build because of the template path; the template now lives in `public/`.
+- **UI improvements:**
+  - Smoother scrolling and page transitions: the navbar and page background no longer repaint on every scroll frame, and the
+    slow 1 to 1.5 s animations were shortened.
+  - Redesigned navbar: cleaner layout, an account drop-down (My account, Change password, Log out) and a simpler mobile menu.
+  - Heart, diabetes, lung and breast forms now share one card style with clearer inputs and one button colour.
+  - The breast page was still showing "Coming soon"; it is now live, with an image preview and probability bars.
+  - Home, About and footer text no longer say breast prediction is coming soon (English).
 - **Repository hygiene:** `.gitignore` for secrets, local user data, uploads and large datasets; removed the tracked user store
   (`mockUsers.json`).
 
