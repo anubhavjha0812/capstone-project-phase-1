@@ -1,24 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
-// Page background blends from white (top of page) to the navbar's blue (bottom of page)
-const START = [255, 255, 255]; // #ffffff
-const END = [154, 217, 255]; // #9AD9FF, same as .navbar
-
+// The page background blends from white (top of page) to the navbar's blue (bottom of page).
+// A fixed blue layer behind the content fades in with the scroll position; changing only its
+// opacity is handled by the GPU, whereas recolouring the body repaints the whole page every frame.
 function ScrollBackground() {
   const { pathname } = useLocation();
+  const layer = useRef(null);
 
   useEffect(() => {
-    // Browsers fire scroll events at most once per frame, so no extra throttling is needed
+    let last = -1;
     const update = () => {
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight;
       const progress =
         maxScroll > 0 ? Math.min(Math.max(window.scrollY / maxScroll, 0), 1) : 0;
-      const [r, g, b] = START.map((s, i) =>
-        Math.round(s + (END[i] - s) * progress)
-      );
-      document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+      if (Math.abs(progress - last) < 0.002) return;
+      last = progress;
+      if (layer.current) layer.current.style.opacity = progress.toFixed(3);
     };
 
     window.addEventListener("scroll", update, { passive: true });
@@ -36,7 +35,7 @@ function ScrollBackground() {
     };
   }, [pathname]);
 
-  return null;
+  return <div ref={layer} className="scroll-bg" aria-hidden="true" />;
 }
 
 export default ScrollBackground;

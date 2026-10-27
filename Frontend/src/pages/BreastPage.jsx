@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../App.css";
 import { FiUpload } from "react-icons/fi";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
@@ -19,6 +19,18 @@ const BreastPage = () => {
   const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false); // State for loading indicator
   const [imageUploaded, setImageUploaded] = useState(false); // State to track image upload
+
+  // Small preview of the chosen image; the object URL is released when the file changes
+  const [previewUrl, setPreviewUrl] = useState("");
+  useEffect(() => {
+    if (!imageFile) {
+      setPreviewUrl("");
+      return undefined;
+    }
+    const url = URL.createObjectURL(imageFile);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [imageFile]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -160,13 +172,13 @@ const BreastPage = () => {
 
   return (
     <div className="lung-page-container">
-      <h1 className="lung-page-header">{t("common.comingSoon")}</h1>
-      {/* <div
+      <div
         className="loader-overlay"
         style={{ display: loading ? "flex" : "none" }}
       >
         <Loader type="TailSpin" color="#FFF" height={70} width={70} />
       </div>
+      <h1 className="lung-page-header">Breast tissue grading</h1>
       {!showResult ? (
         <form className="lung-page-form" onSubmit={handleSubmit}>
           <div className="lung-page-input-container">
@@ -216,12 +228,15 @@ const BreastPage = () => {
                 required
               />
             </label>
+            {previewUrl && (
+              <img className="breast-preview" src={previewUrl} alt="Selected tissue" />
+            )}
             <button
               type="submit"
               className="lung-page-button"
               disabled={loading}
             >
-              Predict
+              {loading ? "Analysing…" : "Predict"}
             </button>
           </div>
         </form>
@@ -240,15 +255,26 @@ const BreastPage = () => {
           >
             {predictionResult.label}
           </p>
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            {Object.entries(predictionResult.probabilities).map(([grade, p]) => (
-              <li key={grade}>
-                {grade === "high" ? "High-grade" : grade === "low" ? "Low-grade" : "Stroma"}:{" "}
-                {Math.round(p * 100)}%
-              </li>
-            ))}
-          </ul>
-          <p style={{ fontSize: "0.85rem", opacity: 0.75 }}>
+          <div className="grade-bars">
+            {[["high", "High-grade tumour"], ["low", "Low-grade tumour"], ["stroma", "Stroma"]].map(
+              ([grade, label]) => {
+                const percent = Math.round((predictionResult.probabilities[grade] ?? 0) * 100);
+                return (
+                  <div key={grade} className="grade-row">
+                    <span className="grade-label">{label}</span>
+                    <span className="grade-track">
+                      <span
+                        className={`grade-fill grade-${grade}${grade === predictionResult.grade ? " is-top" : ""}`}
+                        style={{ width: `${percent}%` }}
+                      />
+                    </span>
+                    <span className="grade-percent">{percent}%</span>
+                  </div>
+                );
+              }
+            )}
+          </div>
+          <p className="breast-disclaimer">
             This is a screening aid for research and learning, not a medical diagnosis.
           </p>
           <div className="lung-page-buttons-container">
@@ -261,7 +287,7 @@ const BreastPage = () => {
           </div>
         </div>
       )}
-      {error && <p className="lung-page-error">{error}</p>} */}
+      {error && <p className="lung-page-error">{error}</p>}
     </div>
   );
 };

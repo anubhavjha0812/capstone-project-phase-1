@@ -20,7 +20,7 @@ const columns = [
       { to: "/predictors/heart", key: "footer.heart" },
       { to: "/predictors/diabetes", key: "footer.diabetes" },
       { to: "/predictors/lung", key: "footer.lung" },
-      { to: "/predictors/breast", key: "footer.breastSoon" },
+      { to: "/predictors/breast", key: "predictors.breastTitle" },
     ],
   },
   {

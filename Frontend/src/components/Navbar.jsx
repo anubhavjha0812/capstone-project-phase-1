@@ -44,13 +44,16 @@ function Navbar() {
     fetchProfile();
   }, []);
 
-  // Glass effect: as you scroll down, the bar gradually turns from solid blue
-  // into see-through frosted white. --glass goes from 0 (top) to 1 (after 160px);
-  // it is set directly on the element so scrolling does not re-render the navbar.
+  // Glass effect: once the page is scrolled a little, the bar turns from solid blue into
+  // see-through frosted white. Only a class is toggled (CSS transitions the colour), so
+  // scrolling does no per-frame style work.
   useEffect(() => {
+    let scrolled = null;
     const update = () => {
-      const glass = Math.min(Math.max(window.scrollY / 160, 0), 1);
-      navRef.current?.style.setProperty("--glass", glass.toFixed(3));
+      const next = window.scrollY > 24;
+      if (next === scrolled) return;
+      scrolled = next;
+      navRef.current?.classList.toggle("is-scrolled", next);
     };
     update();
     window.addEventListener("scroll", update, { passive: true });

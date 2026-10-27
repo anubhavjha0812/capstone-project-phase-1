@@ -192,7 +192,7 @@ const en = {
   aboutPredictix: {
     welcome: "Welcome !",
     title: "About <highlight>Predictix</highlight>",
-    lead: "Predictix is a multi-disease prediction platform that uses machine learning to give early risk predictions. Heart disease, diabetes and lung cancer prediction are available now, and breast cancer prediction is coming soon. Enter your health details or upload a lab report, and get a prediction in seconds.",
+    lead: "Predictix is a multi-disease prediction platform that uses machine learning to give early risk predictions. Heart disease, diabetes, lung cancer and breast tissue grading are available now. Enter your health details or upload a lab report, and get a prediction in seconds.",
     predictsTitle: "What Predictix Predicts",
     heartTitle: "Heart Disease",
     heartModel: "Logistic Regression",
@@ -214,7 +214,7 @@ const en = {
     featureAutofillText:
       "Upload your heart or diabetes lab report as a PDF and Predictix reads the values and fills the form for you.",
     featureImageTitle: "Image-based Detection",
-    featureImageText: "Lung CT scan analysis with a PyTorch deep learning model is available now. Breast cancer detection from medical images is coming soon.",
+    featureImageText: "Lung CT scan analysis with a PyTorch deep learning model and breast tissue grading with a fine-tuned Phikon vision transformer are available now.",
     featureReportTitle: "Downloadable PDF Report",
     featureReportText:
       "Download a report of your inputs and prediction result to keep for your records or share with your doctor.",
@@ -266,7 +266,7 @@ const en = {
     autofillText:
       "Upload a PDF lab report and let Predictix extract the values instead of typing each one by hand.",
     imageTitle: "Lung CT Scan Analysis",
-    imageText: "Upload a lung CT scan image and a deep learning model checks it for signs of cancer. Breast tissue image analysis is coming soon.",
+    imageText: "Upload a lung CT scan image and a deep learning model checks it for signs of cancer. Upload a breast tissue microscope image and the model grades it as high-grade, low-grade or stroma.",
     sharingTitle: "Sharing With Your Doctor",
     sharingText:
       "Download a PDF report of your inputs and result to take to your next medical appointment.",
@@ -280,9 +280,9 @@ const en = {
     a2:
       "No. Predictix is a screening and educational tool, not a substitute for a doctor. If you are facing a medical emergency, contact your local emergency services or visit the nearest hospital immediately.",
     q3: "How does Predictix make its predictions?",
-    a3: "Each disease has its own trained machine learning model. Heart disease uses Logistic Regression and diabetes uses a Random Forest on the clinical values you provide. Lung cancer has two steps: a ResNet-18 convolutional neural network (built with PyTorch) checks your CT scan image, and Logistic Regression uses your answers about age, smoking and symptoms. For the upcoming image-based breast cancer predictor, a Convolutional Neural Network is used.",
+    a3: "Each disease has its own trained machine learning model. Heart disease uses Logistic Regression and diabetes uses a Random Forest on the clinical values you provide. Lung cancer has two steps: a ResNet-18 convolutional neural network (built with PyTorch) checks your CT scan image, and Logistic Regression uses your answers about age, smoking and symptoms. The breast predictor grades a tissue microscope image as high-grade, low-grade or stroma with a fine-tuned Phikon vision transformer.",
     q4: "Which diseases can Predictix predict?",
-    a4: "Heart disease, diabetes and lung cancer are available now. Breast cancer prediction from medical images is coming soon.",
+    a4: "Heart disease, diabetes, lung cancer and breast tissue grading are available now.",
     q5: "Can I upload my lab report instead of typing the values?",
     a5:
       "Yes, for the heart disease and diabetes predictors. Click 'Upload Report' and choose a PDF. Predictix reads the values and fills the form for you. The PDF must contain selectable text (not a scanned photo), and you should check the filled values before predicting.",
