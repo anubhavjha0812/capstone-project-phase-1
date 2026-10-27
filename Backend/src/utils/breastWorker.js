@@ -10,6 +10,7 @@ export const createWorker = (scriptPath, { timeoutMs = 180000 } = {}) => {
   let pending = null; // { resolve, timer }
   let chain = Promise.resolve();
   let lastStderr = "";
+  let state = "idle"; // idle -> loading (download + load) -> ready | unavailable
 
   const pythonCmd = () => process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
 
@@ -23,6 +24,7 @@ export const createWorker = (scriptPath, { timeoutMs = 180000 } = {}) => {
 
   const start = () => {
     proc = spawn(pythonCmd(), [scriptPath, "--serve"]);
+    state = "loading";
     buffer = "";
     proc.stdout.on("data", (chunk) => {
       buffer += chunk.toString();
@@ -37,7 +39,10 @@ export const createWorker = (scriptPath, { timeoutMs = 180000 } = {}) => {
         } catch {
           continue; // library noise on stdout
         }
-        if ("ready" in msg) continue; // startup line, not an answer
+        if ("ready" in msg) {
+          state = msg.ready ? "ready" : "unavailable"; // startup line, not an answer
+          continue;
+        }
         settle(msg);
       }
     });
@@ -46,6 +51,7 @@ export const createWorker = (scriptPath, { timeoutMs = 180000 } = {}) => {
     });
     const onGone = () => {
       proc = null;
+      state = "idle";
       settle({ error: "worker_failed", detail: lastStderr });
     };
     proc.on("error", onGone);
@@ -55,6 +61,8 @@ export const createWorker = (scriptPath, { timeoutMs = 180000 } = {}) => {
   const ask = (imagePath) =>
     new Promise((resolve) => {
       if (!proc) start();
+      // First start may download ~320 MB: answer right away instead of holding the request
+      if (state === "loading") return resolve({ error: "model_loading" });
       const timer = setTimeout(() => {
         proc?.kill();
         settle({ error: "worker_failed", detail: "timeout" });
@@ -64,9 +72,14 @@ export const createWorker = (scriptPath, { timeoutMs = 180000 } = {}) => {
     });
 
   // Never rejects; resolves to the JSON object printed by the script
-  return (imagePath) => {
+  const predict = (imagePath) => {
     const run = chain.then(() => ask(imagePath));
     chain = run.catch(() => {});
     return run;
   };
+  // Starts loading the model in the background (called when the server boots)
+  predict.warmUp = () => {
+    if (!proc) start();
+  };
+  return predict;
 };

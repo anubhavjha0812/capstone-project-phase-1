@@ -365,6 +365,7 @@ const lungctpred = asyncHandler(async (req, res) => {
 });
 
 const predictBreast = createWorker(breastPath);
+predictBreast.warmUp(); // download/load the model now, not on the first upload
 
 // Tissue grade -> short English label stored in the history
 const BREAST_LABELS = {
@@ -385,6 +386,9 @@ const breastpred = asyncHandler(async (req, res) => {
 
     if (result.error === "invalid_image") {
       throw new ApiError(400, "Please upload a valid image (PNG or JPG)");
+    }
+    if (result.error === "model_loading") {
+      throw new ApiError(503, "The breast model is still loading (the first start downloads about 320 MB). Please try again in a few minutes");
     }
     if (result.error === "model_unavailable") {
       throw new ApiError(503, "The breast model is not installed on this server yet");
