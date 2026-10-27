@@ -29,7 +29,7 @@ services:
       EMAIL_PASS: ${EMAIL_PASS:-}
       # Fine-tuned Phikon weights for the breast predictor, downloaded once into the volume below
       BREAST_MODEL_DIR: /models/breast
-      BREAST_MODEL_URL: ${BREAST_MODEL_URL:-}
+      BREAST_MODEL_URL: ${BREAST_MODEL_URL:-https://github.com/anubhavjha0812/capstone-project-phase-1/releases/download/breast-model-v1/breast_model.tar.gz}
     ports:
       - "8080:8080"
     depends_on:

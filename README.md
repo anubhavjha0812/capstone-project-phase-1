@@ -12,8 +12,8 @@ Open http://localhost:5173. This starts the website, the API, MongoDB and all Py
 Optional settings (secrets, email OTP, breast model URL) are in `.env.example`.
 
 The breast predictor uses a fine-tuned Phikon ViT (3-class tissue grade: high / low / stroma). Its weights are
-too large for git; set `BREAST_MODEL_URL` (a `.tar.gz` with `predictix_phikon_grade.pt` and `phikon_config/`)
-and they are downloaded once on first use. Without them the other three predictors still work.
+too large for git; they are downloaded once on first use from the GitHub Release `breast-model-v1` (override with `BREAST_MODEL_URL`, a `.tar.gz` with `predictix_phikon_grade.pt` and `phikon_config/`)
+Without them the other three predictors still work.
 
 ## Table of Contents
 - [Features](#features)
