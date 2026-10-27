@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FaBars, FaTimes, FaUserCircle } from "react-icons/fa";
+import { FaBars, FaTimes, FaChevronDown } from "react-icons/fa";
 import { UserContext } from "../context/UserContext";
 import logoIcon from "../assets/LogoIcon.png";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -22,8 +22,6 @@ const navLinks = [
   { to: "/about-predictix", key: "nav.aboutPredictix" },
   { to: "/integration", key: "nav.integration" },
   { to: "/faqs", key: "nav.faqs" },
-  { to: "/privacy-policy", key: "nav.privacyPolicy" },
-  { to: "/about", key: "nav.aboutUs" },
 ];
 
 function Navbar() {
@@ -37,12 +35,31 @@ function Navbar() {
   const navRef = useRef(null);
   const [compact, setCompact] = useState(false);
   const compactRef = useRef(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
   const fullRowWidth = useRef(0);
   compactRef.current = compact;
 
   useEffect(() => {
     fetchProfile();
   }, []);
+
+  // Close the account menu on outside click or Escape
+  useEffect(() => {
+    if (!userMenuOpen) return undefined;
+    const onClick = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) setUserMenuOpen(false);
+    };
+    const onKey = (e) => {
+      if (e.key === "Escape") setUserMenuOpen(false);
+    };
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [userMenuOpen]);
 
   // Glass effect: once the page is scrolled a little, the bar turns from solid blue into
   // see-through frosted white. Only a class is toggled (CSS transitions the colour), so
@@ -122,6 +139,7 @@ function Navbar() {
       e.preventDefault();
       e.stopPropagation();
     }
+    setUserMenuOpen(false);
     try {
       await fetch("http://localhost:8080/api/v1/users/logout", {
         credentials: "include",
@@ -151,6 +169,7 @@ function Navbar() {
   };
 
   const handleLinkClick = () => {
+    setUserMenuOpen(false);
     if (isMobile) {
       setIsMobile(false);
     }
@@ -177,34 +196,36 @@ function Navbar() {
           </NavLink>
         ))}
         {isLoggedIn ? (
-          <div className="navbar-auth">
-            {/* Greeting with the account icon at the right end of the same line */}
-            <div className="navbar-user">
-              <span className="navbar-greeting" title={username}>{t("nav.hello", { name: username })}</span>
-              <NavLink
-                to="/account"
-                className="navbar-account"
-                onClick={handleLinkClick}
-                aria-label={t("nav.account")}
-                title={t("nav.account")}
-              >
-                <FaUserCircle aria-hidden="true" />
-              </NavLink>
-            </div>
-            <NavLink
-              to="/forgot-password"
-              className="navbar-change-password"
-              onClick={handleLinkClick}
-            >
-              {t("nav.changePassword")}
-            </NavLink>
+          <div className="user-menu" ref={userMenuRef}>
             <button
               type="button"
-              onClick={logout}
-              className="btn btn-logout"
+              className="user-menu__button"
+              onClick={() => setUserMenuOpen(!userMenuOpen)}
+              aria-haspopup="true"
+              aria-expanded={userMenuOpen}
+              title={t("nav.account")}
             >
-              {t("nav.logout")}
+              <span className="user-menu__avatar" aria-hidden="true">
+                {(userInfo.fullname || username).trim().charAt(0).toUpperCase()}
+              </span>
+              <span className="user-menu__name">{userInfo.fullname || username}</span>
+              <FaChevronDown className="user-menu__chevron" aria-hidden="true" />
             </button>
+            <div className={`user-menu__panel ${userMenuOpen ? "open" : ""}`} role="menu">
+              <div className="user-menu__who">
+                <strong>{userInfo.fullname || username}</strong>
+                {userInfo.email && <span>{userInfo.email}</span>}
+              </div>
+              <NavLink to="/account" role="menuitem" className="user-menu__item" onClick={handleLinkClick}>
+                {t("nav.account")}
+              </NavLink>
+              <NavLink to="/forgot-password" role="menuitem" className="user-menu__item" onClick={handleLinkClick}>
+                {t("nav.changePassword")}
+              </NavLink>
+              <button type="button" role="menuitem" className="user-menu__item user-menu__logout" onClick={logout}>
+                {t("nav.logout")}
+              </button>
+            </div>
           </div>
         ) : (
           <div className="navbar-auth">
@@ -227,7 +248,7 @@ function Navbar() {
       </div>
       <LanguageSwitcher />
       <div className="hamburger" onClick={toggleMobileMenu} aria-label={t("nav.menu")} aria-expanded={isMobile} role="button">
-        {isMobile ? <FaTimes size={30} /> : <FaBars size={30} />}
+        {isMobile ? <FaTimes size={22} /> : <FaBars size={22} />}
       </div>
     </nav>
   );
